@@ -22,6 +22,13 @@ sudo apt purge -y thunderbird transmission-gtk warpinator rhythmbox && sudo apt 
 sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 sudo apt update
 sudo apt install -y numlockx fish steam wine winetricks audacious fastfetch btop rar unrar
+wget -q --show-progress \
+  "https://github.com/wimpysworld/sidra/releases/download/0.4.1/Sidra-0.4.1-linux-amd64.deb" \
+  -O /tmp/sidra.deb
+
+sudo apt install -y /tmp/sidra.deb
+
+rm -f /tmp/sidra.deb
 
 echo "=============================="
 echo "== SHELL AYARLANIYOR =="
