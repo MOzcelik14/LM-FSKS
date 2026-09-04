@@ -2,23 +2,44 @@
 
 set -e
 
+echo "=================================================="
+echo "== M. Özçelik LM Format Sonrası Kurulum Scripti =="
+echo "=================================================="
 
-echo "=============================="
+echo
+
+echo "M. Özçelik FSKS'ye hoşgeldiniz."
+
+echo ""
+
+echo "Bu script, Linux Mint kurulumundan sonra sistemi hızlı, düzenli ve kullanıma hazır hale getirmek için gerekli uygulamaları, araçları ve kişisel sistem ayarlarını otomatik olarak yapılandırır. Paket kurulumu, gereksiz bileşenlerin temizlenmesi, terminal ve performans ayarları, Flatpak uygulamaları ve çeşitli kullanıcı özelleştirmeleri tek bir işlem altında gerçekleştirilir."
+
+echo
+
+read -p "Başlamak için Enter tuşuna basınız..."
+
+echo
+
+clear
+
+echo "==================================="
 echo "== GRUB PARAMETRELERİ EKLENİYOR =="
-echo "=============================="
+echo "==================================="
 
 sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 acpi_backlight=native nvme_core.default_ps_max_latency_us=0"/' /etc/default/grub
 sudo update-grub
 
 echo
 
-echo "=============================="
-echo "== GEREKSİZ BİLEŞENLER KALDIRILIYOR VE YENİ PAKETLER KURULUYOR =="
-echo "=============================="
+clear
 
-sudo apt update
+echo "================================================================="
+echo "== GEREKSİZ BİLEŞENLER KALDIRILIYOR VE YENİ PAKETLER KURULUYOR =="
+echo "================================================================="
+
 systemctl disable NetworkManager-wait-online.service
-sudo apt purge -y thunderbird transmission-gtk warpinator rhythmbox && sudo apt autoremove --purge -y
+sudo apt update
+sudo apt purge -y thunderbird transmission-gtk hypnotix warpinator rhythmbox && sudo apt autoremove --purge -y
 sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 sudo apt update
 sudo apt install -y numlockx fish steam wine winetricks audacious fastfetch btop rar unrar
@@ -30,6 +51,32 @@ sudo apt install -y /tmp/sidra.deb
 
 rm -f /tmp/sidra.deb
 
+TMP_DIR=$(mktemp -d)
+cd "$TMP_DIR"
+
+DOWNLOAD_URL=$(curl -s https://api.github.com/repos/PXDiv/Div-Acer-Manager-Max/releases/latest \
+    | grep '"browser_download_url"' \
+    | grep -E '\.tar\.xz"' \
+    | head -1 \
+    | cut -d '"' -f 4)
+
+curl -L "$DOWNLOAD_URL" -o damx.tar.xz
+tar -xJf damx.tar.xz
+
+cd "$(find . -maxdepth 1 -type d -name 'DAMX-*' | head -1)"
+chmod +x setup.sh
+sudo ./setup.sh
+
+cd /
+rm -rf "$TMP_DIR"
+
+mkdir -p ~/.local/share/fonts/JetBrainsMonoNerdFont && \
+curl -L https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -o /tmp/JetBrainsMono.zip && \
+unzip -o /tmp/JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMonoNerdFont && \
+fc-cache -fv
+
+clear
+
 echo "=============================="
 echo "== SHELL AYARLANIYOR =="
 echo "=============================="
@@ -37,30 +84,33 @@ echo "=============================="
 chsh -s /usr/bin/fish
 curl -sS https://starship.rs/install.sh | sh -s -- -y
 
+clear
+
 echo "=============================="
 echo "== FlatPak Uygulamaları =="
 echo "=============================="
 
 flatpak install flathub -y \
 org.kde.kdenlive \
+app.zen_browser.zen \
 org.audacityteam.Audacity \
 org.nickvision.tubeconverter \
 org.onlyoffice.desktopeditors \
 net.davidotek.pupgui2 \
-com.spotify.Client \
+com.google.AndroidStudio \
 com.heroicgameslauncher.hgl
 
-echo "=============================="
-echo "== Winetricks Kurulumları =="
-echo "=============================="
-
-winetricks -q dotnet40 dotnet45 dotnet48 vcrun2022 vcrun6sp6 corefonts
+clear
 
 echo "=============================="
-echo "== DXVK (FL için gerekli) =="
+echo "==  Winetricks Kurulumları  =="
 echo "=============================="
 
-winetricks dxvk2030
+winetricks -q dotnet40 dotnet45 dotnet48 vcrun2022 vcrun6sp6 corefonts dxvk2030
+
+echo
+
+clear
 
 echo "==> zRAM, Swap ve Swappiness ayarlanıyor..."
 
@@ -93,6 +143,8 @@ echo "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab >/dev/null
 # Swappiness değerini 4 yap
 echo "vm.swappiness=4" | sudo tee /etc/sysctl.d/99-swappiness.conf >/dev/null
 sudo sysctl --system
+
+clear
 
 echo
 echo "✅ Ayarlar tamamlandı."
@@ -233,9 +285,12 @@ EOF
 
 echo
 
+clear
 
 echo "=============================="
-echo "== BİTTİ =="
+echo "==    KURULUM TAMAMLANDI    =="
 echo "=============================="
 
-echo "Lütfen sistemi rebootla bebeğim."
+echo "Kurulum tamamlandı. Sistemi yeniden başlatmanız önerilir. İyi günler!"
+
+read -p "Çıkmak için Enter tuşuna basınız..."
