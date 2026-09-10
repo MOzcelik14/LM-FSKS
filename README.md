@@ -1,4 +1,4 @@
-# MOzcelik-LinuxMint-FSKS
+# LM-FSKS
 
 Linux Mint kurulumu sonrasında sistemi hızlıca kişiselleştirmek, gerekli uygulamaları kurmak ve performans ayarlarını yapmak için hazırlanmış kurulum betiği.
 
