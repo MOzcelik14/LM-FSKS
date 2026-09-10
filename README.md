@@ -61,16 +61,28 @@ Acer Nitro 5 (i5-12450H) için özel olarak ayarlanmış `/etc/tlp.conf` dosyas�
 
 ## Kullanım
 
+### Yerel Çalıştırma
+
 ```bash
-chmod +x kurulum.sh
-./kurulum.sh
+chmod +x FSKS.sh
+./FSKS.sh
 ```
+
+### Uzaktan Çalıştırma (GitHub'dan direkt)
+
+Repoyu klonlamadan, tek satırla doğrudan çalıştırmak için:
+
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/MOzcelik14/LM-FSKS/main/FSKS.sh)
+```
+
+> **Neden `bash <(curl ...)` ve düz `curl | bash` değil?**
+> Script içinde `step_pause` fonksiyonu `read -r` ile kullanıcıdan Enter beklediği için, klasik `curl ... | bash` pipe yönteminde stdin curl'e bağlı kalabilir ve bu bekleme adımları çalışmayabilir. Process substitution (`<(...)`) kullanmak, script'i gerçek bir dosyaymış gibi çalıştırır ve stdin'i (Enter beklemeleri, sudo şifre sorması) normal terminale bağlı tutar.
 
 Script, başlangıçta ve sonunda kullanıcıdan Enter tuşuna basmasını bekler (`step_pause`), böylece hangi aşamada olduğunuzu takip edebilirsiniz.
 
 ## Önemli Notlar
 
-- `marin.png` dosyasının `~/.config/fastfetch/` altında mevcut olması gerekir; script bu logoyu otomatik indirmez.
 - Script `set -e` ile çalıştığı için herhangi bir komut hata verirse işlem durur.
 - TLP ve GRUB ayarları donanıma özeldir (Acer Nitro 5 AN515-58); farklı bir cihazda kullanmadan önce `CPU_MAX_PERF_ON_AC/BAT` ve platform profili değerlerini gözden geçirin.
 - Script bazı varsayılan uygulamaları (Firefox, Thunderbird vb.) kaldırdığı için geri dönüşü olmayan bir temizlik yapar; çalıştırmadan önce ihtiyacınız olmadığından emin olun.
@@ -78,4 +90,4 @@ Script, başlangıçta ve sonunda kullanıcıdan Enter tuşuna basmasını bekle
 
 ## Lisans
 
-Kişisel kullanım için hazırlanmıştır. İstediğiniz gibi değiştirebilirsiniz.
+Kişisel kullanım için hazırlanmıştır. Dilediğiniz gibi kendi ihtiyaçlarınıza göre derleyebilirsiniz.
