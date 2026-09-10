@@ -1,170 +1,81 @@
-# LM-FSKS
+# M. Özçelik | LM-FSKS
 
-Linux Mint kurulumu sonrasında sistemi hızlıca kişiselleştirmek, gerekli uygulamaları kurmak ve performans ayarlarını yapmak için hazırlanmış kurulum betiği.
+Linux Mint kurulumundan hemen sonra çalıştırılmak üzere hazırlanmış, sistemi hızlı ve kullanıma hazır hale getiren otomatik kurulum ve yapılandırma scripti.
 
-## Özellikler
+## Ne Yapar?
 
-Betik aşağıdaki işlemleri otomatik olarak gerçekleştirir:
+Script sırasıyla şu işlemleri gerçekleştirir:
 
-* GRUB kernel parametrelerini ekler
+### 1. GRUB Parametreleri
+- `acpi_backlight=native` ve `nvme_core.default_ps_max_latency_us=0` parametrelerini `GRUB_CMDLINE_LINUX_DEFAULT` içine ekler ve `update-grub` çalıştırır.
 
-  * `acpi_backlight=native`
-  * `nvme_core.default_ps_max_latency_us=0`
-* Gereksiz varsayılan uygulamaları kaldırır
+### 2. Paket Temizliği ve Kurulumu
+- `NetworkManager-wait-online` servisini devre dışı bırakır.
+- Gereksiz varsayılan uygulamaları kaldırır: `firefox`, `thunderbird`, `transmission-gtk`, `hypnotix`, `warpinator`, `rhythmbox`.
+- Fastfetch PPA'sını (`ppa:zhangsongcui3371/fastfetch`) ekler.
+- Yeni paketleri kurar: `numlockx`, `fish`, `steam`, `wine`, `winetricks`, `audacious`, `fastfetch`, `btop`, `rar`, `unrar`, `tlp`, `tlp-rdw`.
+- GitHub üzerinden **Sidra** (`.deb`) indirir ve kurar.
+- GitHub Releases API'sini kullanarak en güncel **DAMX (Div Acer Manager Max)** sürümünü indirir ve kurar.
+- **JetBrainsMono Nerd Font**'u indirip `~/.local/share/fonts` altına kurar.
 
-  * Thunderbird
-  * Transmission
-  * Warpinator
-  * Rhythmbox
-* Fastfetch PPA'sını ekler
-* Temel uygulamaları kurar:
+### 3. Shell Ayarları
+- Varsayılan shell'i `fish` olarak ayarlar (`chsh`).
+- **Starship** prompt'u kurar.
 
-  * Fish
-  * Steam
-  * Wine
-  * Winetricks
-  * Audacious
-  * Fastfetch
-  * btop
-  * rar / unrar
-* **Sidra** `.deb` paketini GitHub Releases üzerinden indirip kurar
-* Fish shell'i varsayılan shell yapar
-* Starship prompt'u kurar
-* Flatpak uygulamalarını kurar:
+### 4. Flatpak Uygulamaları
+Flathub üzerinden şu uygulamaları kurar:
+- Kdenlive, Zen Browser, Audacity, TubeConverter, OnlyOffice, ProtonUp-Qt, Android Studio, Heroic Games Launcher.
 
-  * Kdenlive
-  * Audacity
-  * Tube Converter
-  * ONLYOFFICE
-  * ProtonUp-Qt
-  * Spotify
-  * Heroic Games Launcher
-* Wine için gerekli bileşenleri kurar:
+### 5. Winetricks
+Wine üzerinde aşağıdaki bileşenleri kurar:
+- `dotnet40`, `dotnet45`, `dotnet48`, `vcrun2022`, `vcrun6sp6`, `corefonts`, `dxvk2030`.
 
-  * .NET 4.x
-  * Visual C++ 2022
-  * Visual C++ 6 SP6
-  * Core Fonts
-* DXVK 2.0.3 kurar
-* zRAM yapılandırır
-* 4 GB swapfile oluşturur
-* Swappiness değerini `4` olarak ayarlar
-* Fish yapılandırmasını oluşturur
-* Fastfetch için özel konfigürasyon oluşturur
+### 6. zRAM ve Swap
+- `zram-tools` kurar, zRAM'i `zstd` algoritması, `%50` bellek oranı ve `100` öncelik ile yapılandırır.
+- Mevcut swap dosyasını kaldırıp 4 GB'lık yeni bir `swapfile` oluşturur ve `/etc/fstab`'a ekler.
+- `vm.swappiness` değerini `4` olarak ayarlar.
+- İşlem sonunda bellek/swap/zRAM durumunu ekrana yazdırır.
 
-## Kullanım
+### 7. Fish Yapılandırması
+`~/.config/fish/config.fish` dosyasını oluşturur:
+- Etkileşimli oturum açılışında `fastfetch` çalıştırır.
+- `starship` prompt'unu başlatır.
+- Türkçe kısayol alias'ları tanımlar: `güncelle`, `temizle`, `yükle`, `fyükle`, `sil`, `fsil`, `kapa`, `söyle`.
 
-Öncelikle betiği çalıştırılabilir hale getir:
+### 8. Fastfetch Yapılandırması
+`~/.config/fastfetch/config.jsonc` dosyasını Türkçe kısaltılmış anahtar isimleri (`is`, `lnx`, `pkgs`, `çs`, `mib`, `gib`, `ram`, `swp-zram`, `dep`) ve renkli bir alt modül ile oluşturur.
 
-```bash
-chmod +x install.sh
-```
-
-Ardından çalıştır:
-
-```bash
-./install.sh
-```
-
-Betik sırasında `sudo` gerektiğinde şifreni isteyecektir.
+### 9. TLP Güç Yönetimi
+Acer Nitro 5 (i5-12450H) için özel olarak ayarlanmış `/etc/tlp.conf` dosyası oluşturur:
+- CPU governor: `powersave`, enerji-performans politikası dengeli/güç odaklı.
+- AC'de %80, pilde %60 performans tavanı.
+- Turbo Boost ve dinamik güç patlamaları (HWP dynamic boost) kapalı.
+- Platform profili: prizde `quiet`, pilde `low-power`.
+- Disk boşta kalma ve laptop modu senkron ayarları.
 
 ## Gereksinimler
 
-* Linux Mint
-* İnternet bağlantısı
-* `sudo` yetkisi
-* x86_64 / amd64 sistem
+- Yeni kurulmuş bir **Linux Mint** sistemi.
+- İnternet bağlantısı (paket indirmeleri ve GitHub/Flathub erişimi için).
+- `sudo` yetkisi.
 
-Flatpak'ın sistemde kurulu ve Flathub deposunun eklenmiş olması gerekir.
-
-## Kurulum Sonrası
-
-Kurulum tamamlandığında sistemin yeniden başlatılması önerilir:
+## Kullanım
 
 ```bash
-reboot
+chmod +x kurulum.sh
+./kurulum.sh
 ```
 
-Yeniden başlatma sonrasında Fish ve Starship aktif olacak, terminal açıldığında Fastfetch otomatik olarak çalışacaktır.
+Script, başlangıçta ve sonunda kullanıcıdan Enter tuşuna basmasını bekler (`step_pause`), böylece hangi aşamada olduğunuzu takip edebilirsiniz.
 
-## Bellek Yapılandırması
+## Önemli Notlar
 
-Script iki farklı swap mekanizması kullanır.
-
-### zRAM
-
-* Algoritma: `zstd`
-* RAM'in `%50`'si
-* Öncelik: `100`
-
-### Disk swap
-
-* Boyut: `4 GB`
-* Öncelik: sistem varsayılanı
-
-Swappiness:
-
-```text
-vm.swappiness = 4
-```
-
-Kurulumdan sonra kontrol etmek için:
-
-```bash
-free -h
-swapon --show
-zramctl
-cat /proc/sys/vm/swappiness
-```
-
-## Wine / Gaming
-
-Wine ortamı özellikle Windows uygulamaları ve oyunları için temel bileşenlerle hazırlanır.
-
-Kurulan bileşenler:
-
-```text
-dotnet40
-dotnet45
-dotnet48
-vcrun2022
-vcrun6sp6
-corefonts
-dxvk2030
-```
-
-## Fastfetch
-
-Fastfetch yapılandırması:
-
-```text
-~/.config/fastfetch/config.jsonc
-```
-
-Logo:
-
-```text
-~/.config/fastfetch/marin.png
-```
-
-> `marin.png` dosyasının ilgili konumda bulunması gerekir.
-
-## Fish Alias'ları
-
-Kurulumdan sonra aşağıdaki kısa komutlar kullanılabilir:
-
-| Komut      | İşlev                       |
-| ---------- | --------------------------- |
-| `güncelle` | APT ve Flatpak güncellemesi |
-| `temizle`  | Gereksiz paketleri temizler |
-| `yükle`    | APT paketi kurar            |
-| `fyükle`   | Flatpak kurar               |
-| `sil`      | APT paketi kaldırır         |
-| `fsil`     | Flatpak kaldırır            |
-| `kapa`     | Sistemi kapatır             |
-| `söyle`    | `echo` kısayolu             |
+- `marin.png` dosyasının `~/.config/fastfetch/` altında mevcut olması gerekir; script bu logoyu otomatik indirmez.
+- Script `set -e` ile çalıştığı için herhangi bir komut hata verirse işlem durur.
+- TLP ve GRUB ayarları donanıma özeldir (Acer Nitro 5 AN515-58); farklı bir cihazda kullanmadan önce `CPU_MAX_PERF_ON_AC/BAT` ve platform profili değerlerini gözden geçirin.
+- Script bazı varsayılan uygulamaları (Firefox, Thunderbird vb.) kaldırdığı için geri dönüşü olmayan bir temizlik yapar; çalıştırmadan önce ihtiyacınız olmadığından emin olun.
+- Kurulum sonunda sistemi yeniden başlatmanız önerilir.
 
 ## Lisans
 
-Bu script kişisel kullanım amacıyla hazırlanmıştır. İstediğiniz gibi değiştirebilir ve geliştirebilirsiniz.
-
+Kişisel kullanım için hazırlanmıştır. İstediğiniz gibi değiştirebilirsiniz.
