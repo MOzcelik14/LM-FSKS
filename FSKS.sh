@@ -86,7 +86,7 @@ step_pause "Başlamak için Enter tuşuna basınız..."
 section "GRUB PARAMETRELERİ EKLENİYOR" "$YELLOW"
 
 info "acpi_backlight=native ve nvme_core.default_ps_max_latency_us=0 ekleniyor..."
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 acpi_backlight=native nvme_core.default_ps_max_latency_us=0"/' /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 intel_pstate=no_turbo acpi_backlight=native nvme_core.default_ps_max_latency_us=0"/' /etc/default/grub
 sudo update-grub
 success "GRUB güncellendi."
 
