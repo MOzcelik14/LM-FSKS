@@ -13,7 +13,7 @@ Script sırasıyla şu işlemleri gerçekleştirir:
 - `NetworkManager-wait-online` servisini devre dışı bırakır.
 - Gereksiz varsayılan uygulamaları kaldırır: `firefox`, `thunderbird`, `transmission-gtk`, `hypnotix`, `warpinator`, `rhythmbox`.
 - Fastfetch PPA'sını (`ppa:zhangsongcui3371/fastfetch`) ekler.
-- Yeni paketleri kurar: `numlockx`, `fish`, `steam`, `wine`, `winetricks`, `audacious`, `fastfetch`, `btop`, `rar`, `unrar`, `tlp`, `tlp-rdw`.
+- Yeni paketleri kurar: `numlockx`, `fish`, `steam`, `wine`, `winetricks`, `audacious`, `fastfetch`, `btop`, `rar`, `unrar`.
 - GitHub üzerinden **Sidra** (`.deb`) indirir ve kurar.
 - GitHub Releases API'sini kullanarak en güncel **DAMX (Div Acer Manager Max)** sürümünü indirir ve kurar.
 - **JetBrainsMono Nerd Font**'u indirip `~/.local/share/fonts` altına kurar.
@@ -44,14 +44,6 @@ Wine üzerinde aşağıdaki bileşenleri kurar:
 
 ### 8. Fastfetch Yapılandırması
 `~/.config/fastfetch/config.jsonc` dosyasını Türkçe kısaltılmış anahtar isimleri (`is`, `lnx`, `pkgs`, `çs`, `mib`, `gib`, `ram`, `swp-zram`, `dep`) ve renkli bir alt modül ile oluşturur.
-
-### 9. TLP Güç Yönetimi
-Acer Nitro 5 (i5-12450H) için özel olarak ayarlanmış `/etc/tlp.conf` dosyası oluşturur:
-- CPU governor: `powersave`, enerji-performans politikası dengeli/güç odaklı.
-- AC'de %80, pilde %60 performans tavanı.
-- Turbo Boost ve dinamik güç patlamaları (HWP dynamic boost) kapalı.
-- Platform profili: prizde `quiet`, pilde `low-power`.
-- Disk boşta kalma ve laptop modu senkron ayarları.
 
 ## Gereksinimler
 
@@ -84,7 +76,6 @@ Script, başlangıçta ve sonunda kullanıcıdan Enter tuşuna basmasını bekle
 ## Önemli Notlar
 
 - Script `set -e` ile çalıştığı için herhangi bir komut hata verirse işlem durur.
-- TLP ve GRUB ayarları donanıma özeldir (Acer Nitro 5 AN515-58); farklı bir cihazda kullanmadan önce `CPU_MAX_PERF_ON_AC/BAT` ve platform profili değerlerini gözden geçirin.
 - Script bazı varsayılan uygulamaları (Firefox, Thunderbird vb.) kaldırdığı için geri dönüşü olmayan bir temizlik yapar; çalıştırmadan önce ihtiyacınız olmadığından emin olun.
 - Kurulum sonunda sistemi yeniden başlatmanız önerilir.
 
