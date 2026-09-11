@@ -86,7 +86,7 @@ step_pause "Başlamak için Enter tuşuna basınız..."
 section "GRUB PARAMETRELERİ EKLENİYOR" "$YELLOW"
 
 info "acpi_backlight=native ve nvme_core.default_ps_max_latency_us=0 ekleniyor..."
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 intel_pstate=no_turbo acpi_backlight=native nvme_core.default_ps_max_latency_us=0"/' /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 acpi_backlight=native nvme_core.default_ps_max_latency_us=0"/' /etc/default/grub
 sudo update-grub
 success "GRUB güncellendi."
 
@@ -110,8 +110,8 @@ info "Fastfetch PPA'sı ekleniyor..."
 sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 sudo apt update
 
-info "Yeni paketler kuruluyor: numlockx, fish, steam, wine, winetricks, audacious, fastfetch, btop, rar, unrar, tlp, tlp-rdw"
-sudo apt install -y numlockx fish steam wine winetricks audacious fastfetch btop rar unrar tlp tlp-rdw
+info "Yeni paketler kuruluyor: numlockx, fish, steam, wine, winetricks, audacious, fastfetch, btop, rar, unrar"
+sudo apt install -y numlockx fish steam wine winetricks audacious fastfetch btop rar unrar
 success "Paket kurulumu tamamlandı."
 
 info "Sidra indiriliyor..."
@@ -357,62 +357,6 @@ cat > ~/.config/fastfetch/config.jsonc <<'EOF'
 }
 EOF
 success "Fastfetch yapılandırması tamamlandı."
-
-# ------------------------------------------------------------------
-# TLP
-# ------------------------------------------------------------------
-section "TLP GÜÇ VE PERFORMANS KONFİGÜRASYONLARI" "$RED"
-
-cat << 'EOF' | sudo tee /etc/tlp.conf > /dev/null
-# ------------------------------------------------------------------------------
-# /etc/tlp.conf - TLP Acer Nitro 5 (i5-12450H) Özel Güç Ayarları
-# ------------------------------------------------------------------------------
-
-# TLP Güç Yöneticisini Aktif Et
-TLP_ENABLE=1
-TLP_WARN_LEVEL=3
-TLP_DEFAULT_MODE=AC
-TLP_PERSISTENT_DEFAULT=0
-
-# Sürücü Ayarları
-CPU_DRIVER_OPMODE_ON_AC=active
-CPU_DRIVER_OPMODE_ON_BAT=active
-CPU_SCALING_GOVERNOR_ON_AC=powersave
-CPU_SCALING_GOVERNOR_ON_BAT=powersave
-
-# İşlemci Güç Politikası (Sakin ve Dengeli Mod)
-CPU_ENERGY_PERF_POLICY_ON_AC=balance_power
-CPU_ENERGY_PERF_POLICY_ON_BAT=power
-
-# İşlemci Performans Sınırları (%80 Güç Tavanı)
-CPU_MIN_PERF_ON_AC=0
-CPU_MAX_PERF_ON_AC=80
-CPU_MIN_PERF_ON_BAT=0
-CPU_MAX_PERF_ON_BAT=60
-
-# Turbo Boost'u Tamamen Kapat (Ani Watt Fırlamasını Engeller)
-CPU_BOOST_ON_AC=0
-CPU_BOOST_ON_BAT=0
-
-# Dinamik Akıllı Güç Patlamalarını Kapat
-CPU_HWP_DYN_BOOST_ON_AC=0
-CPU_HWP_DYN_BOOST_ON_BAT=0
-NMI_WATCHDOG=0
-
-# Acer Anakart Profili (Prizde Sessiz Mod, Pilde Tasarruf)
-PLATFORM_PROFILE_ON_AC=quiet
-PLATFORM_PROFILE_ON_BAT=low-power
-
-# Disk ve Laptop Modu Senkronizasyon Ayarları
-DISK_IDLE_SECS_ON_AC=0
-DISK_IDLE_SECS_ON_BAT=2
-MAX_LOST_WORK_SECS_ON_AC=15
-MAX_LOST_WORK_SECS_ON_BAT=60
-EOF
-
-sudo systemctl enable tlp
-sudo tlp start
-success "TLP yapılandırması tamamlandı."
 
 # ------------------------------------------------------------------
 # Bitiş
