@@ -167,7 +167,7 @@ success "Shell ayarları tamamlandı."
 # ------------------------------------------------------------------
 section "FLATPAK UYGULAMALARI" "$CYAN"
 
-info "Flatpak uygulamaları kuruluyor: Kdenlive, Zen Browser, Audacity, TubeConverter, OnlyOffice, ProtonUp-Qt, Android Studio, Heroic"
+info "Flatpak uygulamaları kuruluyor..."
 flatpak install flathub -y \
   org.kde.kdenlive \
   app.zen_browser.zen \
@@ -182,9 +182,9 @@ success "Flatpak uygulamaları kuruldu."
 # ------------------------------------------------------------------
 # Winetricks
 # ------------------------------------------------------------------
-section "WINETRICKS KURULUMLARI" "$MAGENTA"
+section "Winetricks Dağıtılabilirleri kuruluyor..." "$MAGENTA"
 
-info "dotnet40, dotnet45, dotnet48, vcrun2022, vcrun6sp6, corefonts, dxvk2030 kuruluyor..."
+info "dotnet40, dotnet45, dotnet48, vcrun2022, vcrun6sp6, corefonts, dxvk2030 kurulacak..."
 winetricks -q dotnet40 dotnet45 dotnet48 vcrun2022 vcrun6sp6 corefonts dxvk2030
 success "Winetricks kurulumu tamamlandı."
 
